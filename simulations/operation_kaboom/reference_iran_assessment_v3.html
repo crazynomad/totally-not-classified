@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>伊朗导弹能力深度评估 3.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+        body { font-family: 'Noto Sans SC', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .chart-container { position: relative; width: 100%; max-width: 700px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(51, 65, 85, 0.8); transition: transform 0.3s ease; }
+        .glass-card:hover { transform: translateY(-4px); }
+        .metric-value { font-weight: 900; background: linear-gradient(to right, #60a5fa, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!--
+    REFERENCE MATERIAL — saved as source data for Operation Kaboom simulator integration.
+    Key data points extracted:
+      - C2 integrity: 34%
+      - Supply chain replenishment: 0.05x (planetary mixer destroyed)
+      - TEL availability: 12.5% (30-40 out of ~300)
+      - Solid fuel survival: 78%, Liquid fuel survival: 22%
+      - Hypersonic survival: 85%, Silo survival: 45%
+      - Bottleneck axes: C2(90), TEL(85), Supply(95), ISR(88), Interception(40)
+      - Scenario A (C2 collapse): [42,35,22,12,8,4,2,1,0,0,0]
+      - Scenario B (Proxy shift): [42,45,48,40,35,30,28,22,18,15,12]
+      - Scenario C (Guerrilla):   [30,28,26,25,24,23,22,21,20,19,18]
+    -->
+
+    <div class="max-w-7xl mx-auto px-4 py-8 md:py-16">
+        <header class="mb-16 text-center">
+            <div class="inline-block px-4 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold tracking-widest mb-4 uppercase">
+                Strategic Intelligence Update 2026
+            </div>
+            <h1 class="text-4xl md:text-6xl font-black mb-6 tracking-tight">
+                伊朗导弹能力：<span class="text-blue-500">动态生存性</span> 评估 3.0
+            </h1>
+            <p class="text-slate-400 text-lg max-w-4xl mx-auto leading-relaxed">
+                基于 IISS、CSIS 及 ISW 的 2026 年 3 月最新研报。本模型整合了"指挥链断裂"、"固液燃料差异"及"供应链阻断"等深度变量，揭示了库存充足背后的平台性枯竭。
+            </p>
+        </header>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div class="glass-card rounded-2xl p-6 shadow-xl">
+                <div class="text-slate-500 text-sm font-bold mb-1">预计总库存</div>
+                <div class="text-3xl metric-value">1,912 枚</div>
+                <div class="text-xs text-slate-500 mt-2">含地下导弹城库存</div>
+            </div>
+            <div class="glass-card rounded-2xl p-6 shadow-xl border-b-4 border-b-blue-500">
+                <div class="text-slate-500 text-sm font-bold mb-1">C2 指挥完整度</div>
+                <div class="text-3xl metric-value">34%</div>
+                <div class="text-xs text-slate-500 mt-2">受最高领袖官邸空袭影响</div>
+            </div>
+            <div class="glass-card rounded-2xl p-6 shadow-xl border-b-4 border-b-yellow-500">
+                <div class="text-slate-500 text-sm font-bold mb-1">供应链补充率</div>
+                <div class="text-3xl metric-value">0.05x</div>
+                <div class="text-xs text-slate-500 mt-2">关键行星搅拌机被毁</div>
+            </div>
+            <div class="glass-card rounded-2xl p-6 shadow-xl border-b-4 border-b-red-500">
+                <div class="text-slate-500 text-sm font-bold mb-1">TEL 平台可用性</div>
+                <div class="text-3xl metric-value">12.5%</div>
+                <div class="text-xs text-slate-500 mt-2">仅存 30-40 台机动平台</div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <div class="glass-card rounded-3xl p-8 shadow-2xl">
+                <h2 class="text-2xl font-bold mb-4 flex items-center">
+                    <span class="mr-3">🛡️</span> 型号生存性与战备率对比
+                </h2>
+                <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                    固体燃料导弹（如 Fateh-110）具备极速反应能力，在联军 ISR（侦察）巡逻下生存率远高于液体燃料导弹。液体导弹由于加注时间过长，极易在发射位被定点清除。
+                </p>
+                <div class="chart-container">
+                    <canvas id="survivalChart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-3xl p-8 shadow-2xl">
+                <h2 class="text-2xl font-bold mb-4 flex items-center">
+                    <span class="mr-3">⚖️</span> 核心打击链瓶颈分析
+                </h2>
+                <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                    本极坐标图展示了制约伊朗导弹能力的五个核心维度。目前，<b>"指挥控制"</b>和<b>"发射平台"</b>是导致整体火力降级的直接原因，而"供应链"决定了长期的不可持续性。
+                </p>
+                <div class="chart-container">
+                    <canvas id="bottleneckChart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-3xl p-8 shadow-2xl lg:col-span-2">
+                <h2 class="text-2xl font-bold mb-4 flex items-center">
+                    <span class="mr-3">📉</span> 未来 10 天火力投射多情境模拟
+                </h2>
+                <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                    模型预测显示，在目前的"C2 瘫痪"情境下，即便伊朗启用代理人补偿火力，其本土发起的远程齐射也将不可逆转地跌破 10 枚/日的枯竭线。代理人（真主党/胡塞）的介入仅能推迟"零点"日期。
+                </p>
+                <div class="chart-container h-[450px]">
+                    <canvas id="endgameChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="md:col-span-2 glass-card rounded-3xl p-8">
+                <h3 class="text-xl font-bold mb-6 text-blue-400">📜 战略结论与优化报告</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="bg-blue-500/20 p-2 rounded-lg mr-4 text-blue-400 font-bold">1</div>
+                        <p class="text-slate-300 text-sm"><b>平台即瓶颈：</b> 优化后的模型确认，伊朗面临的不是导弹稀缺，而是"射手（TEL）"的枯竭。应优先猎杀高机动 TEL 平台而非炸弹仓库。</p>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-blue-500/20 p-2 rounded-lg mr-4 text-blue-400 font-bold">2</div>
+                        <p class="text-slate-300 text-sm"><b>指挥失效加速：</b> 哈梅内伊逝世后的指挥真空（C2<40%）导致发射延迟和目标锁定失败率上升了 2.4 倍。这解释了为何模型预测值与实测值在 Day 7 之后高度契合。</p>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-blue-500/20 p-2 rounded-lg mr-4 text-blue-400 font-bold">3</div>
+                        <p class="text-slate-300 text-sm"><b>工业脊梁折断：</b> 由于中方供应链中关键"行星搅拌机"被截获，伊朗固体燃料补充速度已降至历史最低，其战后重建周期将长达 18 个月以上。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-3xl p-8 border-l-4 border-l-pink-500">
+                <h3 class="text-xl font-bold mb-4 text-pink-400">🛡️ 对华航线建议</h3>
+                <p class="text-sm text-slate-400 mb-4">基于模型预测的 5 月"游击化"不确定性：</p>
+                <ul class="text-xs text-slate-500 space-y-2">
+                    <li class="flex items-center">❌ 避开波斯湾空域（迪拜/多哈转机风险极高）</li>
+                    <li class="flex items-center">✅ 首选跨太平洋/北极直飞航线</li>
+                    <li class="flex items-center">✅ 关注 Polymarket 停火赔率波动</li>
+                </ul>
+                <div class="mt-6 p-3 bg-pink-500/10 rounded-lg text-xs text-pink-300 border border-pink-500/20 text-center">
+                    综合风险评级：<b>极高危</b>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-16 text-center text-slate-600 text-xs border-t border-slate-800 pt-8">
+            数据来源依据：IISS Military Balance 2026, CSIS Missile Defense Project, ISW Iran Update.<br>
+            模型版本：Dynamic Defense Evolution Model (DDEM) v3.1.2 | 无 SVG 及 Mermaid JS 使用。
+        </footer>
+    </div>
+
+    <script>
+        const wrapLabel = (label) => {
+            if (label.length <= 16) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + word).length > 16) {
+                    if (currentLine) lines.push(currentLine.trim());
+                    currentLine = word + ' ';
+                } else {
+                    currentLine += word + ' ';
+                }
+            }
+            if (currentLine) lines.push(currentLine.trim());
+            return lines;
+        };
+
+        const tooltipConfig = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            return Array.isArray(label) ? label.join(' ') : label;
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(document.getElementById('survivalChart'), {
+            type: 'bar',
+            data: {
+                labels: [wrapLabel('固体燃料导弹 (征服者-110 系列)'), wrapLabel('液体燃料导弹 (流星/伊玛德 系列)'), wrapLabel('地下固定发射井 (诱饵/首轮型)'), wrapLabel('高超音速导弹 (法塔赫-1/2)')],
+                datasets: [{
+                    label: '战时生存率估算 (%)',
+                    data: [78, 22, 45, 85],
+                    backgroundColor: ['#3b82f6', '#f472b6', '#facc15', '#10b981'],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: tooltipConfig.plugins,
+                scales: {
+                    x: { beginAtZero: true, max: 100, grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+                    y: { grid: { display: false }, ticks: { color: '#f8fafc' } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('bottleneckChart'), {
+            type: 'polarArea',
+            data: {
+                labels: [wrapLabel('指挥控制 (C2) 混乱度'), wrapLabel('机动平台 (TEL) 损耗率'), wrapLabel('行星搅拌机 供应链压力'), wrapLabel('联军 ISR 监视密度'), wrapLabel('拦截弹 消耗成本比')],
+                datasets: [{
+                    data: [90, 85, 95, 88, 40],
+                    backgroundColor: ['rgba(239, 68, 68, 0.7)', 'rgba(59, 130, 246, 0.7)', 'rgba(244, 114, 182, 0.7)', 'rgba(250, 204, 21, 0.7)', 'rgba(16, 185, 129, 0.7)']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: tooltipConfig.plugins,
+                scales: {
+                    r: { ticks: { display: false }, grid: { color: '#334155' } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('endgameChart'), {
+            type: 'line',
+            data: {
+                labels: ['3/10', '3/11', '3/12', '3/13', '3/14', '3/15', '3/16', '3/17', '3/18', '3/19', '3/20'],
+                datasets: [
+                    {
+                        label: '情境 A: 指挥系统大崩溃 (C2 Collapse)',
+                        data: [42, 35, 22, 12, 8, 4, 2, 1, 0, 0, 0],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: '情境 B: 代理人火力补偿 (Proxy Shift)',
+                        data: [42, 45, 48, 40, 35, 30, 28, 22, 18, 15, 12],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: '情境 C: 游击隐蔽发射 (Guerrilla Tactics)',
+                        data: [30, 28, 26, 25, 24, 23, 22, 21, 20, 19, 18],
+                        borderColor: '#10b981',
+                        borderDash: [5, 5],
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: tooltipConfig.plugins,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: '每日总发射枚数 (含代理人)', color: '#94a3b8' },
+                        grid: { color: '#334155' },
+                        ticks: { color: '#94a3b8' }
+                    },
+                    x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

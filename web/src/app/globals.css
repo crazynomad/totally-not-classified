@@ -1,0 +1,496 @@
+@import "tailwindcss";
+
+/* ============================================
+   TOTALLY NOT CLASSIFIED - Design System
+   Adapted from 不现实商店 FBI Classified Dossier Theme
+   ============================================ */
+
+@theme inline {
+  --color-paper: #F5F0E1;
+  --color-paper-dark: #E8E3D4;
+  --color-paper-manila: #D4C8A8;
+  --color-ink: #1A1A1A;
+  --color-ink-light: #4A4A4A;
+  --color-ink-gray: #666666;
+  --color-brand-yellow: #FFE500;
+  --color-highlight: rgba(255, 229, 0, 0.4);
+  --color-stamp-red: #C41E3A;
+  --color-danger: #DC2626;
+  --color-success: #16A34A;
+
+  --font-typewriter: 'Special Elite', 'Noto Sans SC', 'Courier Prime', monospace;
+  --font-mono: 'Courier Prime', 'Noto Sans SC', 'Courier New', monospace;
+  --font-serif-cn: 'Noto Serif SC', 'Songti SC', serif;
+  --font-sans-cn: 'Noto Sans SC', 'PingFang SC', sans-serif;
+  --font-title-cn: 'ZCOOL XiaoWei', 'Noto Serif SC', 'Songti SC', serif;
+  --font-heading: 'Special Elite', 'ZCOOL XiaoWei', 'Noto Serif SC', 'Courier Prime', monospace;
+  --font-handwritten: 'Ma Shan Zheng', 'Homemade Apple', cursive;
+  --font-stamp: 'Black Ops One', 'ZCOOL XiaoWei', 'Special Elite', monospace;
+
+  --animate-stamp-in: stamp-in 0.5s ease-out 0.3s both;
+  --animate-fade-in-up: fadeInUp 0.6s ease-out both;
+}
+
+:root {
+  --paper: #F5F0E1;
+  --paper-dark: #E8E3D4;
+  --ink: #1A1A1A;
+  --ink-light: #4A4A4A;
+  --brand-yellow: #FFE500;
+  --stamp-red: #C41E3A;
+  --highlight: rgba(255, 229, 0, 0.4);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Serif SC', 'Noto Sans SC', serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Paper texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Vignette effect */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(139, 90, 43, 0.08) 100%);
+  pointer-events: none;
+  z-index: 999;
+}
+
+::selection {
+  background: var(--brand-yellow);
+  color: var(--ink);
+}
+
+/* ============================================
+   Typography
+   ============================================ */
+.font-typewriter { font-family: 'Special Elite', 'Noto Sans SC', 'Courier Prime', monospace; }
+.font-mono { font-family: 'Courier Prime', 'Noto Sans SC', 'Courier New', monospace; }
+.font-serif-cn { font-family: 'Noto Serif SC', 'Songti SC', serif; }
+.font-sans-cn { font-family: 'Noto Sans SC', 'PingFang SC', sans-serif; }
+.font-title-cn { font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', 'Songti SC', serif; }
+.font-heading { font-family: 'Special Elite', 'ZCOOL XiaoWei', 'Noto Serif SC', 'Courier Prime', monospace; }
+.font-handwritten { font-family: 'Ma Shan Zheng', 'Homemade Apple', cursive; }
+.font-stamp { font-family: 'Black Ops One', 'ZCOOL XiaoWei', 'Special Elite', monospace; text-transform: uppercase; }
+
+/* ============================================
+   Keyframe Animations
+   ============================================ */
+@keyframes stamp-in {
+  0% { transform: scale(2) rotate(-15deg); opacity: 0; }
+  50% { transform: scale(1.1) rotate(-15deg); opacity: 0.8; }
+  100% { transform: scale(1) rotate(-15deg); opacity: 0.85; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-50px) rotate(-2deg); }
+  to { opacity: 1; transform: translateX(0) rotate(0); }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(255, 229, 0, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(255, 229, 0, 0.8); }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* ============================================
+   Layout — Consistent content width
+   ============================================ */
+.page-container {
+  width: 100%;
+  max-width: 72rem; /* 6xl */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .page-container {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .page-container {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+/* ============================================
+   Section divider — dashed line with label feel
+   ============================================ */
+.section-divider {
+  border: none;
+  border-top: 1px dashed rgba(26, 26, 26, 0.2);
+  margin: 2.5rem 0;
+}
+
+/* ============================================
+   Component Styles
+   ============================================ */
+
+.classification {
+  display: inline-block;
+  background: var(--brand-yellow);
+  color: var(--ink);
+  padding: 0.5rem 1.25rem;
+  font-family: 'Special Elite', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  transform: rotate(-1deg);
+  border: 2px solid var(--ink);
+}
+
+.stamp {
+  border: 4px solid var(--stamp-red);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'Black Ops One', 'Special Elite', monospace;
+  color: var(--stamp-red);
+  transform: rotate(-15deg);
+  opacity: 0.85;
+  letter-spacing: 0.15em;
+  line-height: 1.4;
+  background: var(--paper);
+  box-shadow: inset 0 0 0 2px var(--stamp-red), 0 0 10px rgba(196, 30, 58, 0.2);
+  text-transform: uppercase;
+}
+
+.file-number {
+  font-family: 'Special Elite', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  opacity: 0.5;
+  text-transform: uppercase;
+}
+
+.btn-primary {
+  background: var(--brand-yellow);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  padding: 0.75rem 1.5rem;
+  font-family: 'Special Elite', monospace;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  padding: 0.75rem 1.5rem;
+  font-family: 'Special Elite', monospace;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Dossier panel */
+.dossier-panel {
+  background: var(--paper);
+  border: 1px solid rgba(26, 26, 26, 0.25);
+  padding: 1.5rem;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .dossier-panel {
+    padding: 2rem;
+  }
+}
+
+/* Elevated dossier panel for primary sections */
+.dossier-panel-elevated {
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  padding: 1.5rem;
+  position: relative;
+  box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.12);
+}
+
+@media (min-width: 768px) {
+  .dossier-panel-elevated {
+    padding: 2rem;
+  }
+}
+
+/* Scanline overlay */
+.scanline-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: rgba(255, 229, 0, 0.3);
+  animation: scanline 4s linear infinite;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Grid background */
+.bg-grid {
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(0, 0, 0, 0.03) 20px, rgba(0, 0, 0, 0.03) 21px),
+    repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(0, 0, 0, 0.03) 20px, rgba(0, 0, 0, 0.03) 21px);
+}
+
+.shadow-card { box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.12); }
+.shadow-stamp { box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2); }
+
+/* Staggered fade-in */
+.animate-fade-in-up-1 { animation: fadeInUp 0.6s ease-out 0.1s both; }
+.animate-fade-in-up-2 { animation: fadeInUp 0.6s ease-out 0.2s both; }
+.animate-fade-in-up-3 { animation: fadeInUp 0.6s ease-out 0.3s both; }
+.animate-fade-in-up-4 { animation: fadeInUp 0.6s ease-out 0.4s both; }
+
+/* Typewriter cursor */
+.typewriter-cursor {
+  display: inline-block;
+  animation: blink 1s step-end infinite;
+}
+
+/* ============================================
+   Stat card — emphasis on the big number
+   ============================================ */
+.stat-card {
+  background: var(--paper);
+  border: 1px solid rgba(26, 26, 26, 0.25);
+  padding: 1.25rem 1.5rem;
+  position: relative;
+  text-align: center;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--brand-yellow);
+}
+
+/* ============================================
+   Form controls
+   ============================================ */
+
+/* Custom range slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--paper-dark);
+  border: 1px solid rgba(26, 26, 26, 0.3);
+  outline: none;
+  border-radius: 0;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--brand-yellow);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--brand-yellow);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+
+/* Number input — hide native spinners */
+input[type="number"] {
+  font-family: 'Courier Prime', monospace;
+  background: var(--paper);
+  border: 1px solid rgba(26, 26, 26, 0.3);
+  padding: 0.3rem 0.5rem;
+  color: var(--ink);
+  width: 4.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"]:focus {
+  outline: 2px solid var(--brand-yellow);
+  outline-offset: -2px;
+}
+
+/* Stepper buttons */
+.stepper-btn {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(26, 26, 26, 0.3);
+  background: var(--paper-dark);
+  color: var(--ink-light);
+  cursor: pointer;
+  font-family: 'Courier Prime', monospace;
+  font-size: 1rem;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.stepper-btn:hover {
+  background: var(--brand-yellow);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.stepper-btn:active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ============================================
+   Language toggle
+   ============================================ */
+.lang-toggle {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 50;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'Special Elite', monospace;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.lang-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* ============================================
+   Anti-war decorative strip
+   ============================================ */
+.antiwar-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid rgba(26, 26, 26, 0.08);
+  border-bottom: 1px solid rgba(26, 26, 26, 0.08);
+  overflow: hidden;
+  opacity: 0.25;
+  transition: opacity 0.4s;
+}
+
+.antiwar-strip:hover {
+  opacity: 0.5;
+}
+
+.antiwar-quote {
+  font-family: 'Special Elite', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--ink);
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.antiwar-dot {
+  font-size: 0.4rem;
+  color: var(--stamp-red);
+  opacity: 0.6;
+}
+
+/* Footer anti-war quote */
+.antiwar-footer-quote {
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dotted rgba(26, 26, 26, 0.15);
+}
+
+@media (max-width: 640px) {
+  .antiwar-strip {
+    gap: 0.5rem;
+  }
+  .antiwar-quote {
+    font-size: 0.45rem;
+  }
+}
